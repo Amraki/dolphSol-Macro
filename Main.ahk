@@ -2769,7 +2769,7 @@ CreateMainUI() {
     Gui Font, s10 w600
     Gui Add, GroupBox, x16 y40 w231 h110 vItemCraftingGroup -Theme +0x50000007, Item Crafting
     Gui Font, s9 norm
-    Gui Add, CheckBox, gItemCraftingCheckBoxClick vItemCraftingCheckBox x32 y58 w190 h22 +0x2, % " Automatic Item Crafting"
+    Gui Add, CheckBox, vItemCraftingCheckBox x32 y58 w190 h22 +Disabled, % " Automatic Item Crafting"
     Gui Font, s9 w600
     Gui Add, GroupBox, x21 y80 w221 h65 vItemCraftingOptionsGroup -Theme +0x50000007, Crafting Options
 
@@ -3845,19 +3845,6 @@ OCREnabledCheckBoxClick:
         GuiControl, , OCREnabledCheckBox, 0
     }
     return
-
-ItemCraftingCheckBoxClick:
-    Gui mainUI:Default
-    GuiControlGet, v,, ItemCraftingCheckBox
-    if (v) {
-        options.ItemCraftingEnabled := 0
-
-        if (!options.ItemCraftingEnabled) {
-            GuiControl, , ItemCraftingCheckBox, 0
-            MsgBox, 0, Error, % "Automatic Item Crafting is not available at this time. The option has been disabled."
-        }
-    }
-return
 
 MoreCreditsClick:
     creditText =
