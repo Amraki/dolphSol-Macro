@@ -564,11 +564,7 @@ determineBiome(){
         return
     }
     getRobloxPos(rX,rY,width,height)
-    x := rX
-    y := rY + height - height*0.135 + ((height/600) - 1)*10 ; Original: rY + height - height*0.102 + ((height/600) - 1)*10
-    w := width*0.15
-    h := height*0.03
-    pBM := Gdip_BitmapFromScreen(x "|" y "|" w "|" h)
+    pBM := Gdip_BitmapFromScreen(rX "|" rY + height - height*0.102 + ((height/600) - 1)*10 "|" width*0.15 "|" height*0.03)
 
     effect := Gdip_CreateEffect(3,"2|0|0|0|0" . "|" . "0|1.5|0|0|0" . "|" . "0|0|1|0|0" . "|" . "0|0|0|1|0" . "|" . "0|0|0.2|0|1",0)
     effect2 := Gdip_CreateEffect(5,-100,250)
