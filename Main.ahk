@@ -215,7 +215,7 @@ if (options.OCREnabled) {
     }
 }
 
-if (ItemCraftingEnabled) {
+if (options.ItemCraftingEnabled) {
     if (options.ItemCraftingEnabled = 1) {
         options.ItemCraftingEnabled := 0
     }
