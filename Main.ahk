@@ -53,7 +53,6 @@ if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)")) {
 ; TODO: change some of these to static variables
 global loggingEnabled := true ; Debug logging to file
 global disableAlignment := false ; Toggle with F5
-global lastLoggedMessage := ""
 global delayMultiplier := 3 ; Delay multiplier for slower computers - Mainly for camera mode changes
 global auraNames := [] ; List of aura names for webhook pings
 global biomes := ["Windy", "Rainy", "Snowy", "Hell", "Starfall", "Corruption", "Null", "Glitched"]
@@ -2220,43 +2219,103 @@ LogError(exc) {
     try webhookPost({embedContent: "[Error - Main.ahk - Line " exc.Line "]: " exc.Message, embedColor: statusColors["Roblox Disconnected"]})
 }
 
+; Track repeated messages
+global logSequence := []
+global repeatCount := 0
+global lastLoggedTime := ""
 logMessage(message, indent := 0) {
-    global loggingEnabled, mainDir, lastLoggedMessage
+    global mainDir, logSequence, repeatCount, lastLoggedTime
     maxLogSize := 1048576 ; 1 MB
-
-    if (!loggingEnabled) {
-        return
-    }
 
     ; Sanitize message
     message := StrReplace(message, options.WebhookLink, "*WebhookLink*")
 
+    ; Get the current time
+    FormatTime, fTime, , hh:mm:ss
 
-    ; Avoid logging the same message again
-    if (message = lastLoggedMessage) {
+    ; Check if the message is a repeat of the recent messages
+    if (IsContinuingSequence(message)) {
+        repeatCount++
+        lastLoggedTime := fTime
         return
     }
-    
-    logFile := mainDir . "\macro_log.txt"
+
+    ; Indent the message if needed
+    Loop, %indent% {
+        message := "    " . message
+    }
+
+    logFile := mainDir . "\log_main.txt"
     try {
-        ; Check the log file size and truncate if necessary
+        ; Prevent the log file from getting too large
         if (FileExist(logFile) && FileGetSize(logFile) > maxLogSize) {
             FileDelete, %logFile%
         }
 
-        if (indent) {
-            message := "    " . message
+        ; If there were repeated messages, log the summary
+        if (repeatCount > 0) {
+            LogRepeatSummary(logFile, lastLoggedTime)
         }
-        FormatTime, fTime, , hh:mm:ss
-        FileAppend, % fTime " " message "`n", %logFile%
-        OutputDebug, % fTime " " message
 
-        ; Update the last logged message
-        lastLoggedMessage := message
-    } catch e {
-        ; TODO: handle gracefully
-        ; ignore error popup for now
+        ; Prepend timestamp to message
+        logEntry := fTime " " message
+
+        FileAppend, %logEntry%`n, %logFile%
+        OutputDebug, %logEntry%
+
+        ; Update the log sequence
+        UpdateLogSequence(message)
     }
+}
+
+IsContinuingSequence(message) {
+    global logSequence, repeatCount
+    if (logSequence.Length() = 0) {
+        return false
+    }
+    
+    expectedIndex := Mod(repeatCount, logSequence.Length()) + 1
+    
+    ; Check if the message continues the current sequence
+    if (message = logSequence[expectedIndex]) {
+        return true
+    }
+
+    ; If not, check if it's the start of a new sequence
+    ; if (message = logSequence[1]) {
+    ;     repeatCount := 0
+    ;     return true
+    ; }
+    
+    ; If neither, it's not part of the sequence
+    return false
+}
+
+UpdateLogSequence(message) {
+    global logSequence, repeatCount
+    if (repeatCount = 0 || logSequence.Length() = 0) {
+        ; Start a new sequence
+        logSequence := [message]
+    } else if (message != logSequence[logSequence.Length()]) {
+        ; Add to the existing sequence if it's a new message
+        logSequence.Push(message)
+    }
+    repeatCount := 0
+}
+
+LogRepeatSummary(logFile, lastLogTime) {
+    global logSequence, repeatCount
+    if (repeatCount = 0) {
+        return
+    }
+
+    ; summary := lastLogTime " Previous " logSequence.Length() " messages repeated " repeatCount // logSequence.Length() " times`n"
+    summary := "  Previous " logSequence.Length() " messages repeated " (repeatCount // logSequence.Length() + 1) " times`n"
+    summary .= "    Last Message: " logSequence[logSequence.Length()] "`n" ; Temp for debugging
+    FileAppend, %summary%, %logFile%
+    OutputDebug, %summary%
+
+    repeatCount := 0
 }
 
 ; Function to get the size of a file
