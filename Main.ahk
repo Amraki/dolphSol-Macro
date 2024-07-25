@@ -144,6 +144,8 @@ global sData := {}
 global options := {"DoingObby":1
     ,"AzertyLayout":0
     ,"ArcanePath":0
+    ,"ArcaneFix":0
+    ,"ExoFlex":0
     ,"CheckObbyBuff":1
     ,"CollectItems":1
     ,"ItemSpot1":1
@@ -223,6 +225,18 @@ if (options.OCREnabled) {
 if (options.ItemCraftingEnabled) {
     if (options.ItemCraftingEnabled = 1) {
         options.ItemCraftingEnabled := 0
+    }
+}
+
+If (!options.ArcanePath || !options.VIP) {
+    If (options.ArcaneFix) {
+        options.ArcaneFix := 0
+    }
+}
+
+If (!options.VIP) {
+    If (options.ExoFlex) {
+        options.ExoFlex := 0
     }
 }
 
@@ -2851,7 +2865,7 @@ CreateMainUI() {
     Gui Font, s11 Norm, Segoe UI
     Gui Add, Picture, gDiscordServerClick w26 h20 x462 y226, % mainDir "images\discordIcon.png"
 
-    Gui Add, Tab3, vMainTabs x8 y8 w484 h210 +0x800000, Main|Crafting|Status|Settings|Credits|Extras
+    Gui Add, Tab3, vMainTabs x8 y8 w484 h210 +0x800000, Main|Crafting|Status|Settings|Extras|Credits
 
 ; main tab
     Gui Tab, 1
@@ -2871,19 +2885,30 @@ CreateMainUI() {
     Gui Add, Button, gAutoEquipHelpClick vAutoEquipHelpButton x457 y50 w23 h23, ?
 
     Gui Font, s10 w600
-    Gui Add, GroupBox, x16 y110 w467 h100 vCollectOptionGroup -Theme +0x50000007, Item Collecting
+    Gui Add, GroupBox, x16 y110 w231 h100 vMovementsetting -Theme +0x50000007, Movement Settings
     Gui Font, s9 norm
-    Gui Add, CheckBox, vCollectCheckBox x32 y129 w261 h26 +0x2, % " Collect Items Around the Map"
+    Gui Add, GroupBox, x21 y157 w221 h48 vMovementsettinggroup -Theme +0x50000007, Path Settings
+
+    Gui Add, CheckBox, gPathSetting vArcanePathCheckBox x32 y129 w100 h26 +0x2, % " Arcane Paths"
+    Gui Add, CheckBox, gPathSetting vVipCheckBox x136 y129 w80 h26 +0x2, % " VIP"
+    Gui Add, CheckBox, vExoFlexCheckBox x136 y174 w100 h26 +0x2, % " ExoFlex Fix"
+    Gui Add, CheckBox, vArcaneFixCheckBox x32 y174 w100 h26 +0x2, % " Arcane Fix"
+
+    Gui Add, Button, gMovementsettingHelpClick vMovementsettingHelp x221 y120 w23 h23, ?
+    Gui Font, s10 w600
+    Gui Add, GroupBox, x252 y110 w231 h100 vCollectOptionGroup -Theme +0x50000007, Item Collection
+    Gui Font, s9 norm
+    Gui Add, CheckBox, vCollectCheckBox x268 y129 w180 h26 +0x2, % " Collect Items Around the Map"
     Gui Add, Button, gCollectHelpClick vCollectHelpButton x457 y120 w23 h23, ?
 
-    Gui Add, GroupBox, x26 y155 w447 h48 vCollectSpotsHolder -Theme +0x50000007, Collect From Spots
-    Gui Add, CheckBox, vCollectSpot1CheckBox x42 y174 w30 h26 +0x2 -Tabstop, % " 1"
-    Gui Add, CheckBox, vCollectSpot2CheckBox x82 y174 w30 h26 +0x2 -Tabstop, % " 2"
-    Gui Add, CheckBox, vCollectSpot3CheckBox x122 y174 w30 h26 +0x2 -Tabstop, % " 3"
-    Gui Add, CheckBox, vCollectSpot4CheckBox x162 y174 w30 h26 +0x2 -Tabstop, % " 4"
-    Gui Add, CheckBox, vCollectSpot5CheckBox x202 y174 w30 h26 +0x2 -Tabstop, % " 5"
-    Gui Add, CheckBox, vCollectSpot6CheckBox x242 y174 w30 h26 +0x2 -Tabstop, % " 6"
-    Gui Add, CheckBox, vCollectSpot7CheckBox x282 y174 w30 h26 +0x2 -Tabstop, % " 7"
+    Gui Add, GroupBox, x257 y157 w221 h48 vCollectSpotsHolder -Theme +0x50000007, Collect From Spots
+    Gui Add, CheckBox, vCollectSpot1CheckBox x268 y174 w30 h26 +0x2 -Tabstop, % " 1"
+    Gui Add, CheckBox, vCollectSpot2CheckBox x298 y174 w30 h26 +0x2 -Tabstop, % " 2"
+    Gui Add, CheckBox, vCollectSpot3CheckBox x328 y174 w30 h26 +0x2 -Tabstop, % " 3"
+    Gui Add, CheckBox, vCollectSpot4CheckBox x358 y174 w30 h26 +0x2 -Tabstop, % " 4"
+    Gui Add, CheckBox, vCollectSpot5CheckBox x388 y174 w30 h26 +0x2 -Tabstop, % " 5"
+    Gui Add, CheckBox, vCollectSpot6CheckBox x418 y174 w30 h26 +0x2 -Tabstop, % " 6"
+    Gui Add, CheckBox, vCollectSpot7CheckBox x448 y174 w26 h26 +0x2 -Tabstop, % " 7"    
 
 ; crafting tab
     Gui Tab, 2
@@ -2974,10 +2999,9 @@ CreateMainUI() {
     Gui Font, s10 w600
     Gui Add, GroupBox, x16 y40 w258 h170 vGeneralSettingsGroup -Theme +0x50000007, General
     Gui Font, s9 norm
-    Gui Add, CheckBox, vVIPCheckBox x32 y58 w150 h22 +0x2, % " VIP Gamepass Owned"
-    Gui Add, CheckBox, vAzertyCheckBox x32 y78 w200 h22 +0x2, % " AZERTY Keyboard Layout"
-    Gui Add, Text, x32 y101 w200 h22, % "Collection Back Button Y Offset:"
-    Gui Add, Edit, x206 y100 w50 h18
+    Gui Add, CheckBox, vAzertyCheckBox x32 y59 w200 h22 +0x2, % " AZERTY Keyboard Layout"
+    Gui Add, Text, x32 y81 w200 h22, % "Collection Back Button Y Offset:"
+    Gui Add, Edit, x206 y81 w50 h18
     Gui Add, UpDown, vBackOffsetUpDown Range-500-500, 0
 
     Gui Font, s10 w600
@@ -3001,7 +3025,7 @@ CreateMainUI() {
     Gui Add, Button, vImportSettingsButton gImportSettingsClick x317 y186 w130 h20, Import Settings
     
 ; credits tab
-    Gui Tab, 5
+    Gui Tab, 6
     Gui Font, s10 w600
     Gui Add, GroupBox, x16 y40 w231 h133 vCreditsGroup -Theme +0x50000007, The Creator
     Gui Add, Picture, w75 h75 x23 y62, % mainDir "images\pfp.png"
@@ -3027,7 +3051,7 @@ CreateMainUI() {
     Gui Add, Link, x268 y150 w200 h55, Join the <a href="https://discord.gg/DYUqwJchuV">Discord Server</a>! (Community)`n`nVisit the <a href="https://github.com/BuilderDolphin/dolphSol-Macro">GitHub</a>! (Updates + Versions)
 
 ; extras tab
-    Gui Tab, 6
+    Gui Tab, 5
     Gui Font, s10 w600
 
     ; General
@@ -3174,6 +3198,9 @@ global directValues := {"ObbyCheckBox":"DoingObby"
     ,"ObbyBuffCheckBox":"CheckObbyBuff"
     ,"CollectCheckBox":"CollectItems"
     ,"VIPCheckBox":"VIP"
+    ,"ArcanePathCheckBox":"ArcanePath"
+    ,"ArcaneFixCheckBox":"ArcaneFix"
+    ,"ExoFlexCheckBox":"ExoFlex"
     ,"BackOffsetUpDown":"BackOffset"
     ,"AutoEquipCheckBox":"AutoEquipEnabled"
     ,"CraftingIntervalUpDown":"CraftingInterval"
@@ -3714,6 +3741,21 @@ GetRobloxVersion:
     options["RobloxUpdatedUI"] := (RobloxUpdatedUIRadio1 = 1) ? 1 : 2
     return
 
+PathSetting:
+    GuiControlGet, VipCheckBox
+    GuiControlGet, ArcanePathCheckBox
+    If (ArcanePathCheckBox = 1 && VipCheckBox = 1) {
+        GuiControl, Enable, ArcaneFixCheckBox
+    } else {
+        GuiControl, Disable, ArcaneFixCheckBox
+    }
+    If (VipCheckBox = 0) {
+        GuiControl, Disable, ExoFlexCheckBox
+    } else {
+        GuiControl, Enable, ExoFlexCheckBox
+    }
+    Return
+
 OCREnabledCheckBoxClick:
     Gui mainUI:Default
     GuiControlGet, v,, OCREnabledCheckBox
@@ -3790,8 +3832,12 @@ AutoEquipHelpClick:
     MsgBox, 0, Auto Equip, % "Section for automatically equipping a specified aura every macro round. This is important for equipping auras without walk animations, which may interfere with the macro.`n`nThis feature is HIGHLY RECOMMENDED to be used on a non-animation aura for best optimization."
     return
 
+MovementsettingHelpClick:
+    MsgBox, 0, Movement Setting, % "• Arcane Path uses Arcane to teleport around the map making it faster`n• Any Arcane Mutations will work`n• It is reccomended to use the Auto equip feature and to auto equip ""Arcane"" to not break the path`n• If the path breaks, check if you own the VIP Gamepass and enable VIP.`n`n• If Arcane path breaks, use Arcane Fix.`n• Use ExoFlex Fix if you use Exoflex Device"
+    return
+
 CollectHelpClick:
-    MsgBox, 0, Item Collecting, % "Section for automatically collecting naturally spawned items around the map. Enabling this will have the macro check the selected spots every loop after doing the obby (if enabled and ready).`n`nYou can also specify which spots to collect from. If a spot is disabled, the macro will not grab any items from the spot. Please note that the macro always takes the same path, it just won't collect from a spot if it's disabled. This feature is useful if you are sharing a server with a friend, and split the spots with them.`n`nItem Spots:`n 1 - Left of the Leaderboards`n 2 - Bottom left edge of the Map`n 3 - Under a tree next to the House`n 4 - Inside the House`n 5 - Under the tree next to Jake's Shop`n 6 - Under the tree next to the Mountain`n 7 - On top of the Hill with the Cave"
+    MsgBox, 0, Item Collection, % "Section for automatically collecting naturally spawned items around the map. Enabling this will have the macro check the selected spots every loop after doing the obby (if enabled and ready).`n`nYou can also specify which spots to collect from. If a spot is disabled, the macro will not grab any items from the spot. Please note that the macro always takes the same path, it just won't collect from a spot if it's disabled. This feature is useful if you are sharing a server with a friend, and split the spots with them.`n`nItem Spots:`n 1 - Left of the Leaderboards`n 2 - Bottom left edge of the Map`n 3 - Under a tree next to the House`n 4 - Inside the House`n 5 - Under the tree next to Jake's Shop`n 6 - Under the tree next to the Mountain`n 7 - On top of the Hill with the Cave"
     return
 
 WebhookHelpClick:
