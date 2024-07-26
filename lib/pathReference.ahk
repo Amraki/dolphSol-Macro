@@ -253,7 +253,7 @@ item5plus(){
         walkSend("a","Down")
         walkSleep(500)
         arcaneTeleport()
-        walkSleep(2500)
+        walkSleep(2400)
         walkSend("a","Up")
         walkSleep(750)
         walkSend("w","Up")
