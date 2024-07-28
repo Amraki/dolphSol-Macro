@@ -144,7 +144,6 @@ global sData := {}
 global options := {"DoingObby":1
     ,"AzertyLayout":0
     ,"ArcanePath":0
-    ,"ArcaneFix":0
     ,"ExoFlex":0
     ,"CheckObbyBuff":1
     ,"CollectItems":1
@@ -225,18 +224,6 @@ if (options.OCREnabled) {
 if (options.ItemCraftingEnabled) {
     if (options.ItemCraftingEnabled = 1) {
         options.ItemCraftingEnabled := 0
-    }
-}
-
-If (!options.ArcanePath || !options.VIP) {
-    If (options.ArcaneFix) {
-        options.ArcaneFix := 0
-    }
-}
-
-If (!options.VIP) {
-    If (options.ExoFlex) {
-        options.ExoFlex := 0
     }
 }
 
@@ -2889,10 +2876,9 @@ CreateMainUI() {
     Gui Font, s9 norm
     Gui Add, GroupBox, x21 y157 w221 h48 vMovementsettinggroup -Theme +0x50000007, Path Settings
 
-    Gui Add, CheckBox, gPathSetting vArcanePathCheckBox x32 y129 w100 h26 +0x2, % " Arcane Paths"
-    Gui Add, CheckBox, gPathSetting vVipCheckBox x136 y129 w80 h26 +0x2, % " VIP"
-    Gui Add, CheckBox, vExoFlexCheckBox x136 y174 w100 h26 +0x2, % " ExoFlex Fix"
-    Gui Add, CheckBox, vArcaneFixCheckBox x32 y174 w100 h26 +0x2, % " Arcane Fix"
+    Gui Add, CheckBox, vArcanePathCheckBox x121 y129 w88 h26 +0x2, % " Arcane Paths"
+    Gui Add, CheckBox, vVipCheckBox x32 y129 w77 h26 +0x2, % " VIP Owned"
+    Gui Add, CheckBox, vExoFlexCheckBox x32 y174 w100 h26 +0x2, % " ExoFlex Fix"
 
     Gui Add, Button, gMovementsettingHelpClick vMovementsettingHelp x221 y120 w23 h23, ?
     Gui Font, s10 w600
@@ -3199,7 +3185,6 @@ global directValues := {"ObbyCheckBox":"DoingObby"
     ,"CollectCheckBox":"CollectItems"
     ,"VIPCheckBox":"VIP"
     ,"ArcanePathCheckBox":"ArcanePath"
-    ,"ArcaneFixCheckBox":"ArcaneFix"
     ,"ExoFlexCheckBox":"ExoFlex"
     ,"BackOffsetUpDown":"BackOffset"
     ,"AutoEquipCheckBox":"AutoEquipEnabled"
@@ -3740,21 +3725,6 @@ GetRobloxVersion:
     Gui, Submit, NoHide
     options["RobloxUpdatedUI"] := (RobloxUpdatedUIRadio1 = 1) ? 1 : 2
     return
-
-PathSetting:
-    GuiControlGet, VipCheckBox
-    GuiControlGet, ArcanePathCheckBox
-    If (ArcanePathCheckBox = 1 && VipCheckBox = 1) {
-        GuiControl, Enable, ArcaneFixCheckBox
-    } else {
-        GuiControl, Disable, ArcaneFixCheckBox
-    }
-    If (VipCheckBox = 0) {
-        GuiControl, Disable, ExoFlexCheckBox
-    } else {
-        GuiControl, Enable, ExoFlexCheckBox
-    }
-    Return
 
 OCREnabledCheckBoxClick:
     Gui mainUI:Default
