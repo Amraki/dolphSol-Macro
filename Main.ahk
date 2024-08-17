@@ -185,8 +185,8 @@ global options := {"DoingObby":1
     ,"LastRobloxRestart":0
     ,"LastAnnouncement":0
     ,"RobloxUpdatedUI":2 ; Default to "New"
-    ,"ClaimDailyQuests":0       ; Stewart
-    ,"SearchSpecialAuras":0     ; Stewart
+    ,"ClaimDailyQuests":0
+    ,"SearchSpecialAuras":0
     ,"Shifter":0
 
     ; Crafting
@@ -982,6 +982,11 @@ resetZoom(){
         Click, WheelUp
         Sleep, 50
     }
+
+    Click, Right Down
+    MouseMove, A_ScreenWidth // 2, A_ScreenHeight
+    Click, Right Up   
+
     Loop 10 {
         Click, WheelDown
         Sleep, 50
@@ -1138,11 +1143,10 @@ alignCamera(){
     rotateCameraMode() ; Follow
     Sleep, 1500
     rotateCameraMode() ; Default(Classic)
-    resetCameraAngle()
+    ; resetCameraAngle()
 
-    ; reset() ; Redundant, handleCrafting() will use align() if needed
-    removeDim()
     reset()
+    removeDim()
     Sleep, 2000
 }
 
@@ -1236,7 +1240,8 @@ runPath(pathName,voidPoints,noCenter = 0){
                     }
                 }
             }
-
+        
+        /*
             blackCorners := 0
             for i,point in scanPoints {
                 PixelGetColor, pColor, % point[1], % point[2], RGB
@@ -1256,6 +1261,7 @@ runPath(pathName,voidPoints,noCenter = 0){
             }
             Sleep, 225
             voidCooldown := Max(0,voidCooldown-1)
+        */
         }
         ; elapsedTime := (A_TickCount - pathRuntime)//1000
         ; logMessage("[runPath] " pathName " completed in " elapsedTime " seconds")
@@ -1758,7 +1764,7 @@ craftingClickAdd(totalSlots, maxes := 0, isGear := 0) {
             Sleep, 200
             MouseClick
             Sleep, 200
-            SendInput, % inputQty
+            Send, % inputQty
             Sleep, 200
 
             ; Click the "Add" button
@@ -2057,7 +2063,7 @@ EquipAura(auraName := "") {
         posBtn := getPositionFromAspectRatioUV(StorageSearchUV[1], StorageSearchUV[2], storageAspectRatio)
     }
     ClickMouse(posBtn[1], posBtn[2])
-    SendInput, % auraName
+    Send, % auraName
     Sleep, 500
 
     ; Search Result
@@ -2101,7 +2107,7 @@ useItem(itemName, useAmount := 1) {
     ; Search for item
     searchBar := getPositionFromAspectRatioUV(0.56, -0.39, storageAspectRatio)
     ClickMouse(searchBar[1], searchBar[2])
-    SendInput, % itemName
+    Send, % itemName
     Sleep, 200
 
     ; Select item
@@ -2896,8 +2902,9 @@ CreateMainUI() {
     Gui Add, CheckBox, vAzertyCheckBox x32 y78 w200 h22 +0x2, % " AZERTY Keyboard Layout"
     Gui Add, CheckBox, vClaimDailyQuestsCheckBox x32 y98 w200 h22 +0x2, % " Auto Claim Daily Quests (30 min)"
     Gui Add, CheckBox, gShifterCheckBoxClick vShifterCheckBox x32 y118 w200 h22 +0x2, % " Abyssal Hunter Shifter Mode"
-    Gui Add, Text, x32 y141 w200 h22, % "Collection Back Button Y Offset:" ; increase by 30 to move down
-    Gui Add, Edit, x206 y140 w50 h18
+    Gui Add, CheckBox, vArcanePathCheckBox x32 y138 w200 h22 +0x2, % " Arcane Paths"
+    Gui Add, Text, x32 y161 w200 h22, % "Collection Back Button Y Offset:" ; increase by 30 to move down
+    Gui Add, Edit, x206 y160 w50 h18
     Gui Add, UpDown, vBackOffsetUpDown Range-500-500, 0
 
     Gui Font, s10 w600
