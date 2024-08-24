@@ -82,6 +82,8 @@ craftingCompleteColor := 0x1C821A
 
 statusEffectSpace := 5
 
+SetKeyDelay, 50 ; I wasnt sure where to put this
+
 global mainDir := A_ScriptDir "\"
 
 logMessage("") ; empty line for separation
@@ -1240,8 +1242,7 @@ runPath(pathName,voidPoints,noCenter = 0){
                     }
                 }
             }
-        
-        /*
+            /*
             blackCorners := 0
             for i,point in scanPoints {
                 PixelGetColor, pColor, % point[1], % point[2], RGB
@@ -1259,6 +1260,7 @@ runPath(pathName,voidPoints,noCenter = 0){
                     }
                 }
             }
+            */
             Sleep, 225
             voidCooldown := Max(0,voidCooldown-1)
         */
