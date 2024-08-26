@@ -31,7 +31,7 @@ CoordMode, Mouse, Screen
 #Include *i ItemScheduler.ahk
 
 global currentVersion := "v1.4.0"
-global currentPatch := "08/08"
+global currentPatch := "08/25"
 global version := currentVersion . " patched " . currentPatch
 
 if (RegExMatch(A_ScriptDir,"\.zip") || IsFunc("ocr") = 0) {
@@ -190,6 +190,7 @@ global options := {"DoingObby":1
     ,"ClaimDailyQuests":0
     ,"SearchSpecialAuras":0
     ,"Shifter":0
+    ,"PathChoice":2 ; Default to Experimental
 
     ; Crafting
     ,"ItemCraftingEnabled":0
@@ -2799,8 +2800,11 @@ CreateMainUI() {
     Gui Font, s10 w600
     Gui Add, GroupBox, x16 y110 w467 h100 vCollectOptionGroup -Theme +0x50000007, Item Collecting
     Gui Font, s9 norm
-    Gui Add, CheckBox, vCollectCheckBox x32 y129 w261 h26 +0x2, % " Collect Items Around the Map"
+    Gui Add, CheckBox, vCollectCheckBox x32 y129 w201 h26 +0x2, % " Collect Items Around the Map"
     Gui Add, Button, gCollectHelpClick vCollectHelpButton x457 y120 w23 h23, ?
+
+    Gui Add, Text, x268 y134 w140 h26, path select :
+    Gui Add, DropDownList, x340 y130 w100 vPathChoice gGetPathOption, classic|experimental
 
     Gui Add, GroupBox, x26 y155 w447 h48 vCollectSpotsHolder -Theme +0x50000007, Collect From Spots
     Gui Add, CheckBox, vCollectSpot1CheckBox x42 y174 w30 h26 +0x2 -Tabstop, % " 1"
@@ -3020,6 +3024,10 @@ ShowAuraSettings() {
 
     ; Create checkboxes for each aura
     for _, auraName in auraNames {
+        ; Skip if the aura name contains "[Cutscene Replay]"
+        if InStr(auraName, "[Cutscene Replay]")
+            continue
+
         ; Convert the aura name to a valid variable name
         sAuraName := RegExReplace(auraName, "[^a-zA-Z0-9]+", "_") ; Replace with underscore
         sAuraName := RegExReplace(sAuraName, "\_$", "") ; Remove any trailing underscore
@@ -3151,7 +3159,8 @@ global directValues := {"ObbyCheckBox":"DoingObby"
     ,"SearchSpecialAurasCheckBox":"SearchSpecialAuras"
     ,"ClaimDailyQuestsCheckBox":"ClaimDailyQuests"
     ,"OCREnabledCheckBox":"OCREnabled"
-    ,"ShifterCheckBox":"Shifter"}
+    ,"ShifterCheckBox":"Shifter"
+    ,"ArcanePathCheckBox":"ArcanePath"}
 
 global directNumValues := {"WebhookRollSendInput":"WebhookRollSendMinimum"
     ,"WebhookRollPingInput":"WebhookRollPingMinimum"}
@@ -3674,6 +3683,11 @@ GetRobloxVersion:
     options["RobloxUpdatedUI"] := (RobloxUpdatedUIRadio1 = 1) ? 1 : 2
     return
 
+GetPathOption:
+    Gui, Submit, NoHide
+    options["PathChoice"] := (PathChoice = "classic") ? 1 : 2
+    return
+
 ShifterCheckBoxClick:
     Gui mainUI:Default
     GuiControlGet, v,, ShifterCheckBox
@@ -3759,7 +3773,7 @@ AutoEquipHelpClick:
     return
 
 CollectHelpClick:
-    MsgBox, 0, Item Collecting, % "Section for automatically collecting naturally spawned items around the map. Enabling this will have the macro check the selected spots every loop after doing the obby (if enabled and ready).`n`nYou can also specify which spots to collect from. If a spot is disabled, the macro will not grab any items from the spot. Please note that the macro always takes the same path, it just won't collect from a spot if it's disabled. This feature is useful if you are sharing a server with a friend, and split the spots with them.`n`nItem Spots:`n 1 - Left of the Leaderboards`n 2 - Bottom left edge of the Map`n 3 - Under a tree next to the House`n 4 - Inside the House`n 5 - Under the tree next to Jake's Shop`n 6 - Under the tree next to the Mountain`n 7 - On top of the Hill with the Cave"
+    MsgBox, 0, Item Collecting, % "Section for automatically collecting naturally spawned items around the map. Enabling this will have the macro check the selected spots every loop after doing the obby (if enabled and ready).`n`nYou can also specify which spots to collect from. If a spot is disabled, the macro will not grab any items from the spot. Please note that the macro always takes the same path, it just won't collect from a spot if it's disabled. This feature is useful if you are sharing a server with a friend, and split the spots with them.`n`nItem Spots:`n 1 - Left of the Leaderboards`n 2 - Bottom left edge of the Map`n 3 - Under a tree next to the House`n 4 - Inside the House`n 5 - Under the tree next to Jake's Shop`n 6 - Under the tree next to the Mountain`n 7 - On top of the Hill with the Cave`n`nClassic Paths:`nUse with low end systems; if you often miss the jump to the house from the rock, or just prefer the consistency.`n`nExperimental Paths:`nUses different paths that more depend on performance or togglable options.`nEx: Arcane Paths, Abyssal Hunter Shifter Mode."
     return
 
 WebhookHelpClick:
