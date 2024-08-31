@@ -31,6 +31,8 @@ global webhookEnabled := 0
 global webhookURL := ""
 global discordID := ""
 global discordGlitchID := "" ; can be a role or a user. role is prefixed with "&"
+global glitchedUrlLink := "" ; specific webhook url for glitch biome only
+global PrivateServerId := ""
 global sendMinimum := 10000
 global pingMinimum := 100000
 global auraImages := 0
@@ -64,6 +66,8 @@ if (!ErrorLevel){
     }
     RegExMatch(retrieved, "(?<=DiscordUserID=)(.*)", discordID)
     RegExMatch(retrieved, "(?<=DiscordGlitchID=)(.*)", discordGlitchID)
+    RegExMatch(retrieved, "(?<=glitchedUrlLink=)(.*)", glitchedUrlLink)
+    RegExMatch(retrieved, "(?<=PrivateServerId=)(.*)", PrivateServerId)
     RegExMatch(retrieved, "(?<=WebhookRollSendMinimum=)(.*)", sendMinimum)
     RegExMatch(retrieved, "(?<=WebhookRollPingMinimum=)(.*)", pingMinimum)
     RegExMatch(retrieved, "(?<=WebhookAuraRollImages=)(.*)", auraImages)
@@ -435,6 +439,7 @@ webhookPost(data := 0){
     data := data ? data : {}
 
     url := webhookURL
+    glitchedUrl := glitchedUrlLink ; URL for the Glitched biome
 
     if (!url){
         ExitApp
@@ -445,8 +450,15 @@ webhookPost(data := 0){
     }
 
     ; Append extra ping id for glitch biome - can be a role or a user. role is prefixed with "&"
-    if (data.biome && data.biome = "Glitched" && discordGlitchID) {
-        data.content := data.content ? data.content " <@" discordGlitchID ">" : "<@" discordGlitchID ">"
+    if (data.biome = "Glitched") {
+        if (discordGlitchID) {
+            data.content := data.content ? data.content " <@" discordGlitchID ">" : "<@" discordGlitchID ">"
+        }
+
+        ; Include private server url
+        if (PrivateServerId) {
+            data.content := data.content ? data.content " https://www.roblox.com/games/15532962292/Sols-RNG?privateServerLinkCode=" PrivateServerId : PrivateServerId
+        }
     }
 
     ; Append extra ping id for auras containing "Apex"
@@ -481,6 +493,7 @@ webhookPost(data := 0){
         objParam["file" i] := [v]
     }
 
+    ; Send the webhook to the primary URL
     CreateFormData(postdata,hdr_ContentType,objParam)
 
     WebRequest := ComObjCreate("WinHttp.WinHttpRequest.5.1")
@@ -492,6 +505,19 @@ webhookPost(data := 0){
     WebRequest.SetRequestHeader("If-Modified-Since", "Sat, 1 Jan 2000 00:00:00 GMT")
     WebRequest.Send(postdata)
     WebRequest.WaitForResponse()
+
+    ; If biome is "Glitched", also send to the secondary webhook URL
+    if (data.biome = "Glitched" && glitchedUrl) {
+        WebRequest := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+        WebRequest.Open("POST", glitchedUrl, true)
+        WebRequest.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko")
+        WebRequest.SetRequestHeader("Content-Type", hdr_ContentType)
+        WebRequest.SetRequestHeader("Pragma", "no-cache")
+        WebRequest.SetRequestHeader("Cache-Control", "no-cache, no-store")
+        WebRequest.SetRequestHeader("If-Modified-Since", "Sat, 1 Jan 2000 00:00:00 GMT")
+        WebRequest.Send(postdata)
+        WebRequest.WaitForResponse()
+    }
 }
 
 global similarCharacters := {"1":"l"

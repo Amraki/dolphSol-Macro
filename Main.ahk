@@ -170,6 +170,7 @@ global options := {"DoingObby":1
     ,"InOwnPrivateServer":1 ; Determines side button positions
     ,"WebhookEnabled":0
     ,"WebhookLink":""
+    ,"glitchedUrlLink":""
     ,"WebhookImportantOnly":0
     ,"DiscordUserID":""
     ,"DiscordGlitchID":"" ; Used in status.ahk for biome ping in Discord - Defaults to DiscordUserID if not set
@@ -186,7 +187,7 @@ global options := {"DoingObby":1
     ,"RestartRobloxInterval":1
     ,"LastRobloxRestart":0
     ,"LastAnnouncement":0
-    ,"RobloxUpdatedUI":2 ; Default to "New"
+    ,"RobloxUpdatedUI":1 ; Default to "Old"
     ,"ClaimDailyQuests":0
     ,"SearchSpecialAuras":0
     ,"Shifter":0
