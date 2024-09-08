@@ -12,7 +12,7 @@ CoordMode, Mouse, Screen
 
 ; Classic Paths
 if (options.PathChoice = 1) {
-    
+
     walkSend("s","Down")
     walkSend("a","Down")
     walkSleep(1300)
@@ -125,6 +125,7 @@ if (options.PathChoice = 1) {
 ; Experimental Paths
 } else if (options.PathChoice = 2) {
 
+    ; Arcane Paths
     if (options.ArcanePath) {
         
         ; Arcane Paths With VIP
@@ -369,28 +370,26 @@ if (options.PathChoice = 1) {
             collect(7)
 
     }
-
     ; End of Arcane Paths
-    } else
 
-        walkSend("s","Down")
-        walkSend("a","Down")
-        walkSleep(1300)
-        walkSend("a","Up")
-        walkSleep(2150)
-        walkSend("s","Up")
-        collect(1)
+    ; Shifter Paths
+    } else if (options.Shifter) {
+        
+            walkSend("s","Down")
+            walkSend("a","Down")
+            walkSleep(1300)
+            walkSend("a","Up")
+            walkSleep(2150)
+            walkSend("s","Up")
+            collect(1)
+    
+            walkSend("d","Down")
+            walkSleep(1000)
+            press("s",200)
+            walkSleep(2200)
+            walkSend("d","Up")
+            collect(2)
 
-        walkSend("d","Down")
-        walkSleep(1000)
-        press("s",200)
-        walkSleep(2200)
-        walkSend("d","Up")
-        collect(2)
-        
-        ; Shifter Paths
-        if (options.Shifter) {
-        
             walkSend("a","Down")
             walkSend("w","Down")
             walkSleep(200)
@@ -474,7 +473,21 @@ if (options.PathChoice = 1) {
 
         ; VIP Paths
         } else if (options.VIP) {
-        
+            walkSend("s","Down")
+            walkSend("a","Down")
+            walkSleep(1300)
+            walkSend("a","Up")
+            walkSleep(2150)
+            walkSend("s","Up")
+            collect(1)
+    
+            walkSend("d","Down")
+            walkSleep(1000)
+            press("s",200)
+            walkSleep(2200)
+            walkSend("d","Up")
+            collect(2)
+
             walkSend("a","Down")
             walkSend("w","Down")
             walkSleep(200)
@@ -561,7 +574,21 @@ if (options.PathChoice = 1) {
 
         ; Non VIP Paths
         } else {
-        
+            walkSend("s","Down")
+            walkSend("a","Down")
+            walkSleep(1300)
+            walkSend("a","Up")
+            walkSleep(2150)
+            walkSend("s","Up")
+            collect(1)
+    
+            walkSend("d","Down")
+            walkSleep(1000)
+            press("s",200)
+            walkSleep(2200)
+            walkSend("d","Up")
+            collect(2)
+            
             reset()
             Sleep, 2000
         

@@ -173,7 +173,7 @@ global options := {"DoingObby":1
     ,"glitchedUrlLink":""
     ,"WebhookImportantOnly":0
     ,"DiscordUserID":""
-    ,"DiscordGlitchID":"" ; Used in status.ahk for biome ping in Discord - Defaults to DiscordUserID if not set
+    ,"DiscordGlitchID":"" ; Used in status.ahk for extra biome ping in Discord
     ,"WebhookRollSendMinimum":10000
     ,"WebhookRollPingMinimum":100000
     ,"WebhookAuraRollImages":0
@@ -1265,7 +1265,6 @@ runPath(pathName,voidPoints,noCenter = 0){
             */
             Sleep, 225
             voidCooldown := Max(0,voidCooldown-1)
-        */
         }
         ; elapsedTime := (A_TickCount - pathRuntime)//1000
         ; logMessage("[runPath] " pathName " completed in " elapsedTime " seconds")
@@ -2868,18 +2867,23 @@ CreateMainUI() {
 
     Gui Font, s10 w600
     Gui Add, GroupBox, x151 y40 w200 h170 vWebhookGroup -Theme +0x50000007, Discord Webhook
+
     Gui Font, s7.5 norm
-    Gui Add, CheckBox, vWebhookCheckBox x166 y63 w120 h16 +0x2 gEnableWebhookToggle, % " Enable Webhook"
-    Gui Add, Text, x161 y85 w100 h20 vWebhookInputHeader BackgroundTrans, Webhook URL:
-    Gui Add, Edit, x166 y103 w169 h18 vWebhookInput,% ""
-    Gui Add, Button, gWebhookHelpClick vWebhookHelpButton x325 y50 w23 h23, ?
-    Gui Add, CheckBox, vWebhookImportantOnlyCheckBox x166 y126 w140 h16 +0x2, % " Important events only"
-    Gui Add, Text, vWebhookUserIDHeader x161 y145 w150 h14 BackgroundTrans, % "Discord User ID (Pings):"
-    Gui Add, Edit, x166 y162 w169 h16 vWebhookUserIDInput,% ""
+    Gui Add, CheckBox, vWebhookCheckBox x161 y63 w120 h16 +0x2 gEnableWebhookToggle, % " Enable Webhook"
+    Gui Add, CheckBox, vWebhookImportantOnlyCheckBox x161 y81 w140 h16 +0x2, % " Important events only"
+
     Gui Font, s7.4 norm
-    Gui Add, CheckBox, vWebhookInventoryScreenshots x161 y182 w130 h26 +0x2, % "Inventory Screenshots (mins)"
-    Gui Add, Edit, x294 y186 w50 h18
+    Gui Add, CheckBox, vWebhookInventoryScreenshots x161 y99 w130 h16 +0x2, % " Inventory Screenshots (mins)"
+    Gui Add, Edit, x294 y98 w50 h18
     Gui Add, UpDown, vInvScreenshotinterval Range1-1440
+
+    Gui Font, s7.5 norm
+    Gui Add, Text, x161 y122 w100 h20 vWebhookInputHeader BackgroundTrans, Webhook URL:
+    Gui Add, Edit, x166 y140 w169 h18 vWebhookInput,% ""
+    Gui Add, Button, gWebhookHelpClick vWebhookHelpButton x325 y50 w23 h23, ?
+
+    Gui Add, Text, vWebhookUserIDHeader x161 y164 w150 h14 BackgroundTrans, % "Discord User ID (Pings):"
+    Gui Add, Edit, x166 y182 w169 h16 vWebhookUserIDInput,% ""    
 
     Gui Font, s10 w600
     Gui Add, GroupBox, x356 y40 w127 h50 vStatusOtherGroup -Theme +0x50000007, Other
@@ -2970,21 +2974,34 @@ CreateMainUI() {
     Gui Add, CheckBox, gOCREnabledCheckBoxClick vOCREnabledCheckBox x32 y60 w400 h22 +0x2 Section, % " Enable OCR for Self-Correction (Requires English-US PC Language)"
     Gui Add, Button, gOCRHelpClick vOCRHelpButton x457 y50 w23 h23, ?
 
-    Gui Add, Button, gShowBiomeSettings vBiomeButton x16 y100 w128, Configure Biomes
-    Gui Add, Button, gShowItemSchedulerSettings vSchedulerGUIButton x16 y+5 w128, Item Scheduler
+    ; Glitch Webhook
+    Gui Font, s10 w600
+    Gui Add, GroupBox, x16 y90 w150 h120 vGlitchsGroup -Theme +0x50000007, Glitch Webhook
 
-    Gui Add, Button, gUIHelpClick vUIHelpButton x380 y190 w100 h23, how can I tell?
+    Gui Font, s7.5 norm
+    Gui Add, Text, x26 y122 w100 h20 vGlitchWebhookInputHeader BackgroundTrans, Webhook URL:
+    Gui Add, Edit, x31 y140 w119 h18 vGlitchWebhookInput,% ""
+    Gui Add, Button, gGlitchWebhookHelpClick vGlitchWebhookHelpButton x140 y99 w23 h23, ?
+
+    Gui Add, Text, vGlitchWebhookUserIDHeader x26 y164 w100 h14 BackgroundTrans, % "Role ID (Pings):"
+    Gui Add, Edit, x31 y182 w119 h16 vGlitchWebhookUserIDInput,% ""   
 
     ; Roblox UI style to determine Chat button position
     Gui Font, s10 w600
-    Gui Add, Text, x400 y130, Roblox UI
+    Gui Add, GroupBox, x171 y90 w110 h120 vRobloxUIGroup -Theme +0x50000007, Roblox UI
     Gui Font, s9 norm
-    
+
     ; options["RobloxUpdatedUI"]
-    Gui Add, Radio, AltSubmit gGetRobloxVersion vRobloxUpdatedUIRadio1 x420 y150, Old
+    Gui Add, Radio, AltSubmit gGetRobloxVersion vRobloxUpdatedUIRadio1 x184 y114, Old
     Gui Add, Radio, AltSubmit gGetRobloxVersion vRobloxUpdatedUIRadio2, New
     GuiControl,, RobloxUpdatedUIRadio1, % (options["RobloxUpdatedUI"] = 1) ? 1 : 0
     GuiControl,, RobloxUpdatedUIRadio2, % (options["RobloxUpdatedUI"] = 2) ? 1 : 0
+
+    Gui Add, Button, gUIHelpClick vUIHelpButton x176 y184 w100 h23, how can I tell?
+
+    ; Other
+    Gui Add, Button, gShowBiomeSettings vBiomeButton x287 y100 w128, Configure Biomes
+    Gui Add, Button, gShowItemSchedulerSettings vSchedulerGUIButton x287 y+5 w128, Item Scheduler
 
     Gui Show, % "w500 h254 x" clamp(options.WindowX,10,A_ScreenWidth-100) " y" clamp(options.WindowY,10,A_ScreenHeight-100), % "dolphSol Macro " version
 
@@ -3161,7 +3178,9 @@ global directValues := {"ObbyCheckBox":"DoingObby"
     ,"ClaimDailyQuestsCheckBox":"ClaimDailyQuests"
     ,"OCREnabledCheckBox":"OCREnabled"
     ,"ShifterCheckBox":"Shifter"
-    ,"ArcanePathCheckBox":"ArcanePath"}
+    ,"ArcanePathCheckBox":"ArcanePath"
+    ,"GlitchWebhookInput":"glitchedUrlLink"
+    ,"GlitchWebhookUserIDInput":"discordGlitchID"}
 
 global directNumValues := {"WebhookRollSendInput":"WebhookRollSendMinimum"
     ,"WebhookRollPingInput":"WebhookRollPingMinimum"}
@@ -3789,9 +3808,13 @@ OCRHelpClick:
     MsgBox, 0, OCR, % "OCR allows the macro to respond to events instead of blindly pressing keys and moving the mouse. Currently requires Roblox to be ran at 1920x1080 resolution and 100% scale."
 	return
 
+GlitchWebhookHelpClick:
+    MsgBox, 0, Glitch Webhook Information, % "Section for sending glitch biome detections to a secondary webhook link. Detections will also send with a private server link. `n`nTo get role pings to work, place a & before the role id `nExample: &1234567890"
+    return
+
 UIHelpClick:
     Gui, New 
-    Gui, Add, Picture, x20 y50, % mainDir "images\UIInformation.png" ; Change to the path of your image file
+    Gui, Add, Picture, x20 y50, % mainDir "images\UIInformation.png"
     Gui, Show, AutoSize  ; Adjust the GUI window size to fit the image
     return
 
