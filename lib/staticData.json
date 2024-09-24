@@ -5,7 +5,7 @@
         "versionLink":"https://github.com/Amraki/dolphSol-Macro",
         "updateNotes":"Something new!"
     },
-    "biomes": ["Windy", "Rainy", "Snowy", "Hell", "Starfall", "Corruption", "Null", "Glitched"],
+    "biomes": ["Windy", "Rainy", "Snowy", "SandStorm", "Hell", "Starfall", "Corruption", "Null", "Glitched"],
     "scheduleItems": ["Strange Controller", "Biome Randomizer", "Lucky Potion", "Speed Potion", "Fortune Potion I", "Fortune Potion II", "Fortune Potion III", "Haste Potion I", "Haste Potion II", "Haste Potion III", "Heavenly Potion I", "Heavenly Potion II", "Merchant Teleport", "Oblivion Potion"],
     "stars": {
         "495104": {
@@ -123,14 +123,6 @@
                     "requirements": {
                         "is100k": 1
                     }
-                },
-                {
-                    "name": "Lunar : Full Moon",
-                    "image": "https://static.wikia.nocookie.net/sol-rng/images/4/40/LunarFMReworkCollection.gif",
-                    "rarity": 5000000,
-                    "requirements": {
-                        "is1m": 1
-                    }
                 }
             ]
         },
@@ -231,7 +223,7 @@
         },
         "9937663": {
             "name": "Celestial",
-            "image": "https://static.wikia.nocookie.net/sol-rng/images/6/60/CelestialAura.gif",
+            "image": "https://static.wikia.nocookie.net/sol-rng/images/5/5b/Celestial_rework_crop.gif",
             "rarity": 350000,
             "mutations": [
                 {
@@ -279,8 +271,7 @@
         "7839231": {
             "name": "Arcane",
             "image": "https://static.wikia.nocookie.net/sol-rng/images/8/86/Arcane_Gif_25Fps.gif",
-            "rarity": 1000000,
-            "cornerColor": 3355443
+            "rarity": 1000000
         },
         "16744319": {
             "name": "STARSCOURGE [From Starfall]",
@@ -338,6 +329,12 @@
             "rarity": 3000000,
             "cornerColor": 3355443
         },
+        "16733570": {
+            "name": "Savior",
+            "image": "https://static.wikia.nocookie.net/sol-rng/images/a/a4/Savior_Collection.gif",
+            "rarity": 3200000,
+            "cornerColor": 3348505
+        },
         "943242": {
             "name": "Poseidon",
             "image": "https://static.wikia.nocookie.net/sol-rng/images/d/db/PosEra7.gif",
@@ -363,10 +360,22 @@
             "rarity": 5000000,
             "cornerColor": 3355443
         },
+        "8414463": {
+            "name": "Lunar : Full Moon",
+            "image": "https://static.wikia.nocookie.net/sol-rng/images/4/40/LunarFMReworkCollection.gif",
+            "rarity": 5000000,
+            "cornerColor": 3355443
+        },
         "5719807": {
             "name": "Twilight [1/2 Iridescent Memory]",
             "image": "https://static.wikia.nocookie.net/sol-rng/images/b/b4/TwilightInCollection.gif",
             "rarity": 6000000
+        },
+        "6053887": {
+            "name": "Origin",
+            "image": "https://static.wikia.nocookie.net/sol-rng/images/5/52/Origin_collection.png",
+            "rarity": 6500000,
+            "cornerColor": 1119795 
         },
         "7808256": {
             "name": "Hades",
@@ -383,7 +392,12 @@
         "9200127": {
             "name": "HYPER-VOLT [Cutscene Replay]",
             "image": "https://static.wikia.nocookie.net/sol-rng/images/d/d4/HpVl.gif",
-            "rarity": 7500000,
+            "rarity": 7500000
+        },
+        "1644825": {
+            "name": "Nihility",
+            "image": "https://static.wikia.nocookie.net/sol-rng/images/c/ca/Nihility_collection.gif",
+            "rarity": 9000000,
             "cornerColor": 3355443
         },
         "10337023": {
@@ -414,6 +428,17 @@
             "image": "https://static.wikia.nocookie.net/sol-rng/images/b/bc/Etherealpretrans.gif",
             "rarity": 35000000,
             "cornerColor": 10000536
+        },
+        "10207231": {
+            "name": "Overseer",
+            "image": "https://static.wikia.nocookie.net/sol-rng/images/0/0b/Overseer-collection.gif",
+            "rarity": 45000000,
+            "cornerColor": 6456216
+        },
+        "5456852": {
+            "name": "Memory, The Fallen",
+            "image": "https://static.wikia.nocookie.net/sol-rng/images/3/35/Memory_Collections.gif",
+            "rarity": 50000000
         },
         "6029232": {
             "name": "Matrix",
@@ -488,6 +513,12 @@
             "rarity": 300000000,
             "biome": {"name": "Hell", "factor":6}
         },
+        "12025160": {
+            "name": "ATLAS",
+            "image": "https://static.wikia.nocookie.net/sol-rng/images/a/aa/AtlasIngame.gif",
+            "rarity": 360000000,
+            "biome": {"name": "SandStorm", "factor":4}
+        },
         "2839551": {
             "name": "Abyssal Hunter",
             "image": "https://static.wikia.nocookie.net/sol-rng/images/c/ce/Abyssal_Hunter_Collection2.gif",
@@ -500,15 +531,30 @@
             "rarity": 430000000,
             "biome": {"name": "Starfall", "factor":10}
         },
+        "16737104": {
+            "name": "APOSTOLOS",
+            "image": "https://static.wikia.nocookie.net/sol-rng/images/9/9a/Apostolos_in_collection.jpg",
+            "rarity": 444000000
+        },
         "7647801": {
             "name": "Ruins",
             "image": "https://static.wikia.nocookie.net/sol-rng/images/7/74/Ruins.collection.gif",
             "rarity": 500000000
         },
+        "14032418": {
+            "name": "MATRIX : OVERDRIVE",
+            "image": "https://static.wikia.nocookie.net/sol-rng/images/4/4a/Overdrive.jpg",
+            "rarity": 503000000
+        },
         "9747638": {
             "name": "SOVEREIGN",
             "image": "https://static.wikia.nocookie.net/sol-rng/images/0/05/Sovereign_Collection_E8.gif",
             "rarity": 750000000
+        },
+        "3232255": {
+            "name": "AEGIS",
+            "image": "https://static.wikia.nocookie.net/sol-rng/images/2/29/AegisIngame.gif",
+            "rarity": 825000000
         }
     }
 }]
